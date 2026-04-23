@@ -1,0 +1,93 @@
+{
+  "project_name": "AAN Services Staffing App",
+  "app_type": "hybrid_fullstack",
+  "theme": "Light",
+  "archetype": "4 (Swiss & High-Contrast - Custom Indian Corporate Variation)",
+  "design_philosophy": "A trustworthy, clean, mobile-first interface designed for handling sensitive identity data (Aadhaar) and managing blue-collar workforce operations. Built for clarity and speed.",
+  "fonts": {
+    "heading": "Outfit",
+    "body": "Manrope",
+    "setup_instructions": "Import 'Outfit' (weights 500,600,700) and 'Manrope' (weights 400,500,600) from Google Fonts. Apply font-outfit to Headings and font-manrope to the Body.",
+    "hierarchy": {
+      "h1": "text-2xl sm:text-3xl font-bold tracking-tight text-slate-900",
+      "h2": "text-xl sm:text-2xl font-semibold tracking-tight text-slate-900",
+      "h3": "text-lg font-medium tracking-tight text-slate-900",
+      "body": "text-sm sm:text-base font-normal leading-relaxed text-slate-600",
+      "label": "text-xs font-bold tracking-[0.05em] uppercase text-slate-500",
+      "stat_value": "text-3xl font-bold tracking-tight text-slate-900"
+    }
+  },
+  "colors": {
+    "background": {
+      "app_bg": "#F8FAFC",
+      "surface": "#FFFFFF",
+      "glass": "rgba(255, 255, 255, 0.9)"
+    },
+    "text": {
+      "primary": "#0F172A",
+      "secondary": "#475569",
+      "muted": "#94A3B8"
+    },
+    "brand": {
+      "primary": "#1E3A8A",
+      "primary_hover": "#1E40AF",
+      "accent": "#EA580C",
+      "success": "#10B981",
+      "danger": "#EF4444"
+    },
+    "border": {
+      "light": "#F1F5F9",
+      "default": "#E2E8F0"
+    }
+  },
+  "spacing_and_layout": {
+    "container_strategy": "Mobile-first PWA approach. Wrap main app in max-w-md mx-auto min-h-screen bg-slate-50 relative pb-20 (to account for bottom nav).",
+    "padding": {
+      "screen_x": "px-5",
+      "section_y": "py-6",
+      "card_internal": "p-5"
+    },
+    "bento_dashboard": "grid grid-cols-2 gap-4",
+    "radius": {
+      "card": "rounded-2xl",
+      "button": "rounded-xl",
+      "input": "rounded-xl",
+      "image": "rounded-lg"
+    }
+  },
+  "surfaces": {
+    "app_header": "sticky top-0 w-full h-16 bg-white/90 backdrop-blur-xl border-b border-slate-200 flex items-center justify-between px-5 z-40",
+    "bottom_nav": "fixed bottom-0 w-full max-w-md mx-auto h-16 bg-white/95 backdrop-blur-xl border-t border-slate-200 flex justify-around items-center z-50 pb-safe",
+    "card_default": "bg-white rounded-2xl p-5 border border-slate-200 shadow-sm",
+    "card_elevated": "bg-white rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100",
+    "input_field": "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all",
+    "primary_button": "w-full bg-blue-900 text-white rounded-xl py-4 px-6 font-semibold text-sm flex items-center justify-center hover:bg-blue-800 transition-colors shadow-sm active:scale-[0.98]",
+    "secondary_button": "w-full bg-slate-100 text-slate-900 rounded-xl py-4 px-6 font-semibold text-sm flex items-center justify-center hover:bg-slate-200 transition-colors active:scale-[0.98]"
+  },
+  "motion": {
+    "hover_state": "transition-all duration-200 ease-out",
+    "page_load": "animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+  },
+  "icons": {
+    "library": "lucide-react",
+    "default_size": 24,
+    "default_stroke": 2,
+    "nav_active_color": "text-blue-900",
+    "nav_inactive_color": "text-slate-400"
+  },
+  "component_instructions": {
+    "WebView": "Embed https://aanservices.in via iframe with w-full h-full border-none. Sub-container must be h-[calc(100vh-4rem)] to not overlap with bottom nav. Show a centered Loader2 (animate-spin) while loading.",
+    "Aadhaar_Capture": "Crucial trust component. Use HTML5 <input type='file' accept='image/*' capture='environment' className='hidden' /> connected to a styled trigger button (e.g., 'Take Photo'). Show a clear rounded-xl preview of the Base64 image with a 'Retake' overlay button.",
+    "Dashboard_Grid": "Use Bento grid (grid-cols-2). 'Total Employees' card: col-span-1 bg-blue-900 text-white. 'Industries': col-span-1 bg-white text-slate-900 border border-slate-200. 'Recent Onboards' list: col-span-2 bg-white.",
+    "Forms": "Group logically. 1. Personal Info, 2. Job Details, 3. Aadhaar Upload. Use flex-col gap-5. Labels should be uppercase, tracking-wide (text-xs text-slate-500 mb-1.5 inline-block).",
+    "Employee_List": "Use a virtualized or mapped list. Each row: Avatar on left, Name/Designation in middle, Industry Tag on right (badge style: bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-full).",
+    "Testing": "MANDATORY: Add data-testid to every button, input, nav item, and key text element."
+  },
+  "media": {
+    "brand_logo": "https://img1.wsimg.com/isteam/ip/c4c9e109-b5b2-4745-851e-8f937ee2d4d0/project_20260203_0524580-01.png",
+    "avatar_placeholder": "https://ui-avatars.com/api/?background=E2E8F0&color=0F172A&bold=true",
+    "worker_hero_1": "https://images.unsplash.com/photo-1748944078380-3d12ffee7378?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBibHVlJTIwY29sbGFyJTIwd29ya2VyfGVufDB8fHx8MTc3NjcyNTkwOXww&ixlib=rb-4.1.0&q=85",
+    "warehouse_hero_2": "https://images.pexels.com/photos/4487382/pexels-photo-4487382.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "usage": "Use worker_hero images in empty states (e.g., 'No employees found') or onboarding screens, rounded-xl with an overlay."
+  }
+}

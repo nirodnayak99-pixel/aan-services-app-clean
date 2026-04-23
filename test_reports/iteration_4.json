@@ -1,0 +1,55 @@
+{
+  "summary": "Iteration 4 REGRESSION - Both HIGH frontend bugs from iteration_3 are FIXED and verified. Backend: 47/47 pytest still PASS. Frontend (390x844 mobile viewport) admin + manager flows all pass. NOTE: After main agent's edits, Expo/Metro was serving a stale bundle - first regression pass still saw old errors. After `sudo supervisorctl restart expo` + rebuild, the fresh bundle ran cleanly and all regression checks succeed.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": [
+      {
+        "component": "global",
+        "issue": "LOW/cosmetic: 'shadow*' style props deprecated (use boxShadow); props.pointerEvents deprecated; Animated useNativeDriver warning. Carried over from prior iterations, not blocking."
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_aan_services.py",
+    "/app/backend/tests/test_iter3_users_csv_roles.py",
+    "/app/backend/tests/conftest.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "regression_results": {
+    "backend_pytest": "47/47 PASS (22 aan_services + 25 iter3_users_csv_roles) in 13.76s",
+    "admin_employees_csv_btn": "PASS - employees-export-csv-btn visible next to employees-add-btn; click triggered web download 'aan_employees_20260420_235608.csv'",
+    "admin_industries_no_red_screen": "PASS - No ReferenceError. industries-add-btn visible, 9 rows rendered, per-row edit/delete icons visible",
+    "manager_industries_read_only": "PASS - No ReferenceError. industries-add-btn HIDDEN, all 9 rows visible as read-only, no edit/delete icons",
+    "manager_employees_csv_btn": "PASS - employees-export-csv-btn visible (managers can export), employees-add-btn also visible (managers can onboard)",
+    "manager_employee_detail_pdf_yes_delete_no": "PASS - 'Share Onboarding PDF' text present (count=1); 'Delete Employee' text absent (count=0)",
+    "manager_profile_manage_users_hidden": "PASS - 'Manage Users' text count=0 on manager profile",
+    "cleanup": "PASS - test manager user mgr-regr@aanservices.in deleted after run (HTTP 200)"
+  },
+  "action_items": [
+    "None blocking. Both HIGH bugs fixed and verified end-to-end.",
+    "Optional LOW: Silence shadow*/pointerEvents/useNativeDriver deprecation warnings (cosmetic).",
+    "Optional LOW: Add data-testid='employee-share-pdf-btn' and 'employee-delete-btn' on employee detail screen buttons for more robust test selectors (tests currently fall back to visible-text matching which still works)."
+  ],
+  "critical_code_review_comments": [
+    "industries.tsx fix verified correct: `import { useAuth } from '../../src/auth'` at line 19; `const { user } = useAuth(); const isAdmin = user?.role === 'admin';` inside IndustriesScreen (lines 23-24). Both the header + button and per-row edit/delete icons correctly gated on `isAdmin`.",
+    "employees.tsx fix verified correct: header now contains a row View with gap:8 wrapping two TouchableOpacity buttons - `employees-export-csv-btn` (download icon, onPress=onExportCsv) and `employees-add-btn` (+). `exporting` state drives ActivityIndicator correctly.",
+    "Backend RBAC continues to work correctly - manager created via API was correctly restricted from admin-only UI surfaces (no +, no edit/delete on industries; no delete on employee detail; no Manage Users on profile), while still having CSV export and employee onboarding access.",
+    "IMPORTANT DevOps note for future iterations: Metro in CI mode does not auto-reload file changes. After main agent edits frontend code, `sudo supervisorctl restart expo` is required before the web preview reflects the change. Testing agents should always restart expo prior to frontend regression when files were modified."
+  ],
+  "updated_files": [
+    "/app/test_reports/iteration_4.json (created)",
+    "/app/test_reports/pytest/pytest_results.xml (refreshed)"
+  ],
+  "success_rate": {"backend": "100% (47/47)", "frontend": "100% (7/7 regression checks)"},
+  "seed_data_creation": "Temporary manager user mgr-regr@aanservices.in / Manager@1 created via POST /api/users and deleted via DELETE /api/users/{id} after regression. Pytest fixtures also clean up TEST_* data in teardown.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Iteration 3 feature set (user management + CSV export + manager role restrictions) is fully green after iteration 4 regression. If main agent adds NEW features, rerun full pytest suite and Playwright admin+manager flows. Remember to `sudo supervisorctl restart expo` after any frontend code changes because Metro runs in CI mode (no watch). Admin: admin@aanservices.in / Admin@123. Create managers on the fly via POST /api/users. There are lingering UI_TEST_ / TEST_ industries from previous runs (e.g. UI_TEST_Ind_1776727198) - safe to leave.",
+  "rca_of_issue": "Initial pass of this regression iteration showed the OLD errors (ReferenceError at industries.tsx:121; CSV button missing on employees) despite the source files on disk already containing the fixes. Root cause: Metro bundler in this container runs with CI=true (see /var/log/supervisor/expo.out.log: 'Metro is running in CI mode, reloads are disabled'). As a result, post-edit file watching does not trigger rebundle. Mitigation: `sudo supervisorctl restart expo` forces a fresh web bundle. After restart, all 7 regression checks passed on the first try."
+}
