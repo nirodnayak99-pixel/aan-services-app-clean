@@ -38,14 +38,16 @@ export default function ProfileScreen() {
 };
 
 const handleLogout = async () => {
-  console.log("Logout triggered");
   await logout();
-  console.log("Token cleared"); 
-  router.replace("/login");
 
   if (typeof window !== "undefined") {
-    window.location.reload();
+    // ✅ Force navigation on web
+    window.location.href = "/login";
+    return;
   }
+
+  // ✅ Mobile navigation
+  router.replace("/login");
 };
 
   return (
