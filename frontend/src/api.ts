@@ -1,18 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
 const BACKEND_URL = "https://aan-backend-production.up.railway.app";
 
 export const TOKEN_KEY = "aan_auth_token";
 
 export async function getToken(): Promise<string | null> {
+  if (Platform.OS === "web") {
+    return localStorage.getItem(TOKEN_KEY);
+  }
   return AsyncStorage.getItem(TOKEN_KEY);
 }
 
 export async function setToken(token: string): Promise<void> {
+  if (Platform.OS === "web") {
+    localStorage.setItem(TOKEN_KEY, token);
+    return;
+  }
   await AsyncStorage.setItem(TOKEN_KEY, token);
 }
 
 export async function clearToken(): Promise<void> {
+  if (Platform.OS === "web") {
+    localStorage.removeItem(TOKEN_KEY);   // 🔴 THIS FIXES WEB LOGOUT
+    return;
+  }
   await AsyncStorage.removeItem(TOKEN_KEY);
 }
 
@@ -33,7 +45,7 @@ export async function apiRequest<T = any>(
     const token = await getToken();
     if (token) headers["Authorization"] = `Bearer ${token}`;
   }
-  const res = await fetch(`${BACKEND_URL}${path}`, {
+  const res = await fetch(`${BACKEND_URL}/${path.replace(/^\/+/, "")}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
@@ -43,7 +55,7 @@ export async function apiRequest<T = any>(
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
-    throw new Error('Invalid server response: ${text}');
+    throw new Error(`Invalid server response: ${text}`);
   }
   if (!res.ok) {
     const detail = data?.detail;
