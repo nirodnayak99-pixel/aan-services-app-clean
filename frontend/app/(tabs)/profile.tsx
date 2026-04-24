@@ -6,7 +6,7 @@ import {
   Linking,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,12 +18,14 @@ export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
   const confirmLogout = () => {
+    console.log("Logout button clicked");
     Alert.alert("Logout", "Are you sure you want to sign out?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Logout",
         style: "destructive",
         onPress: async () => {
+          console.log("Logout confirmed");
           await logout();
           router.replace("/login");
         },
@@ -93,14 +95,14 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        testID="profile-logout-btn"
-        style={styles.logoutBtn}
-        onPress={confirmLogout}
-      >
+        <Pressable
+          testID="profile-logout-btn"
+          style={styles.logoutBtn}
+          onPress={confirmLogout}
+        >
         <Ionicons name="log-out-outline" size={20} color={colors.danger} />
         <Text style={styles.logoutText}>Sign Out</Text>
-      </TouchableOpacity>
+      </Pressable>
     </SafeAreaView>
   );
 }
