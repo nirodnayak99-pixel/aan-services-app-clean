@@ -95,27 +95,46 @@ export default function IndustriesScreen() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+  try {
+    await apiRequest(`/industries/${id}`, { method: "DELETE" });
+    await load();
+  } catch (e: any) {
+    if (Platform.OS === "web") {
+      window.alert(e?.message ?? "Failed");
+    } else {
+      Alert.alert("Cannot delete", e?.message ?? "Failed");
+    }
+  }
+};
+
   const onDelete = (i: Industry) => {
-    Alert.alert(
-      "Delete Industry",
-      `Remove "${i.name}"? This is blocked if employees are tagged to it.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await apiRequest(`/industries/${i.id}`, { method: "DELETE" });
-              await load();
-            } catch (e: any) {
-              Alert.alert("Cannot delete", e?.message ?? "Failed");
-            }
-          },
-        },
-      ]
+  if (Platform.OS === "web") {
+    const confirmed = window.confirm(
+      `Remove "${i.name}"?\n\nThis is blocked if employees are tagged.`
     );
-  };
+
+    if (confirmed) {
+      handleDelete(i.id);
+    }
+    return;
+  }
+
+  Alert.alert(
+    "Delete Industry",
+    `Remove "${i.name}"? This is blocked if employees are tagged to it.`,
+    [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => handleDelete(i.id),
+      },
+    ]
+  );
+};
+
+
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -342,3 +361,4 @@ const styles = StyleSheet.create({
   },
   saveText: { color: "#fff", fontWeight: "700", fontSize: 15 },
 });
+
