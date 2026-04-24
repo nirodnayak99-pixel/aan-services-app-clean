@@ -8,6 +8,7 @@ import {
   Text,
   Pressable,
   View,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../src/auth";
@@ -18,20 +19,34 @@ export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
   const confirmLogout = () => {
-    console.log("Logout button clicked");
-    Alert.alert("Logout", "Are you sure you want to sign out?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Logout",
-        style: "destructive",
-        onPress: async () => {
-          console.log("Logout confirmed");
-          await logout();
-          router.replace("/login");
-        },
-      },
-    ]);
-  };
+  if (typeof window !== "undefined") {
+    const confirmed = window.confirm("Are you sure you want to sign out?");
+    if (confirmed) {
+      handleLogout();
+    }
+    return;
+  }
+
+  Alert.alert("Logout", "Are you sure you want to sign out?", [
+    { text: "Cancel", style: "cancel" },
+    {
+      text: "Logout",
+      style: "destructive",
+      onPress: handleLogout,
+    },
+  ]);
+};
+
+const handleLogout = async () => {
+  console.log("Logout triggered");
+  await logout();
+  console.log("Token cleared"); 
+  router.replace("/login");
+
+  if (typeof window !== "undefined") {
+    window.location.reload();
+  }
+};
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -62,7 +77,7 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         {user?.role === "admin" ? (
-          <TouchableOpacity
+          <Pressable
             testID="profile-manage-users"
             style={[styles.row, { marginBottom: 10 }]}
             onPress={() => router.push("/users")}
@@ -78,9 +93,9 @@ export default function ProfileScreen() {
               size={18}
               color={colors.textMuted}
             />
-          </TouchableOpacity>
+          </Pressable>
         ) : null}
-        <TouchableOpacity
+        <Pressable
           testID="profile-open-website"
           style={styles.row}
           onPress={() => Linking.openURL("https://aanservices.in")}
@@ -92,17 +107,17 @@ export default function ProfileScreen() {
             size={18}
             color={colors.textMuted}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
-        <Pressable
+        <TouchableOpacity
           testID="profile-logout-btn"
           style={styles.logoutBtn}
           onPress={confirmLogout}
         >
-        <Ionicons name="log-out-outline" size={20} color={colors.danger} />
-        <Text style={styles.logoutText}>Sign Out</Text>
-      </Pressable>
+          <Ionicons name="log-out-outline" size={20} color={colors.danger} />
+          <Text style={styles.logoutText}>Sign Out</Text>
+        </TouchableOpacity>
     </SafeAreaView>
   );
 }

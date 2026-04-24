@@ -6,7 +6,7 @@ const BACKEND_URL = "https://aan-backend-production.up.railway.app";
 export const TOKEN_KEY = "aan_auth_token";
 
 export async function getToken(): Promise<string | null> {
-  if (Platform.OS === "web") {
+  if (Platform.OS === "web" && typeof window !== "undefined") {
     return localStorage.getItem(TOKEN_KEY);
   }
   return AsyncStorage.getItem(TOKEN_KEY);
