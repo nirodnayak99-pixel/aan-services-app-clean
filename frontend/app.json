@@ -4,7 +4,7 @@
     "slug": "aan-services",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets//images/icon.png",
     "scheme": "aanservices",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
